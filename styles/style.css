@@ -1,0 +1,36 @@
+* {
+     padding: 0;
+     margin: 0;
+     font-family: serif;
+     box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+     display: none;
+}
+
+#teacherDrop:hover #teacherCont {
+     display: flex;
+     transition: .2s;
+}
+
+.shadow-bottom {
+     box-shadow: 0 4px 4px -2px #4443;
+}
+
+#backButton {
+     border-radius: 4px;
+     padding: 8px;
+     border: none;
+     font-size: 16px;
+     background-color: #2eacd1;
+     color: white;
+     position: absolute;
+     top: 10px;
+     right: 10px;
+     cursor: pointer;
+}
+
+.invisible {
+     display: none;
+}
