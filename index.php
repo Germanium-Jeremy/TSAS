@@ -1,58 +1,5 @@
 <?php
 include('php/dbConnection.php');
-function showsearch($searched) {
-     global $connection;
-     $sql = "SELECT t.*, a.*, s.* 
-             FROM teacher AS t 
-             JOIN subAllocation AS a ON t.ID = a.TeacherID 
-             JOIN subjects AS s ON a.SubjectID = s.ID 
-             WHERE t.FirstName LIKE '%$searched%' 
-             OR t.LastName LIKE '%$searched%' 
-             OR t.Email LIKE '%$searched%' 
-             OR s.SubjectFullname LIKE '%$searched%' 
-             OR a.AllocationDate LIKE '%$searched%';";
-     $result = $connection->query($sql);
-     if ($result->num_rows > 0) {
- ?>
-         <table class="w-full max-h-3/4 h-fit text-center pt-[3rem] fixed bottom-0 bg-white z-[7] overflow-y-auto" id="results">
-             <thead class="relative">
-                 <tr class="shadow-bottom">
-                     <th class="py-[1rem]">S.no</th>
-                     <th class="py-[1rem]">Teacher Names</th>
-                     <th class="py-[1rem]">Teacher Email</th>
-                     <th class="py-[1rem]">Subjects Taught</th>
-                     <th class="py-[1rem]">Allocation Date</th>
-                 </tr>
-             </thead>
-             <tbody>
-<?php
-         while ($row = $result->fetch_assoc()) {
-?>
-                 <tr class="shadow-bottom">
-                     <td class="py-[.5rem]"><?php echo $row['ID']; ?></td>
-                     <td class="py-[.5rem]"><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
-                     <td class="py-[.5rem]"><?php echo $row['Email']; ?></td>
-                     <td class="py-[.5rem]"><?php echo $row['SubjectFullname']; ?></td>
-                     <td class="py-[.5rem]"><?php echo $row['AllocationDate']; ?></td>
-                 </tr>
-<?php
-         }
-?>
-             </tbody>
-         </table>
-<?php
-     } else {
-         echo '<p class="text-center p-[1rem] bg-red-600 text-2xl">No Results Found</p>';
-     }
-}
-if (isset($_POST['search'])) {
-     $searched = $_POST['search'];
-     if (!empty($searched)) {
-          showsearch($searched);
-     } else {
-          echo '<script>alert("No data to search")</script>';
-     }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,38 +15,106 @@ if (isset($_POST['search'])) {
      <title>TSAS</title>
 </head>
 <body class="bg-[#eee] h-fit w-screen">
-<div class="z-[5] w-full h-[10vh] mb-[2rem]">
-     <header class="px-8 py-3 w-1/2 flex flex-row justify-between float-right">
-          <div class="px-6 py-1 bg-[#1b20b6] rounded-3xl font-bold text-md text-white"><a href="./">Home</a></div>
-          <div class="px-6 py-1 rounded-3xl font-bold text-md"><a href="./pages/login.php">Login</a></div>
-     </header>
-</div>
-<div class="w-full h-[6vh] relative py-2 z-[2]">
-     <form class="rounded-2xl w-1/2 p-1 flex bg-gradient-to-l from-[#0c0e50] to-[#1b20b6] absolute right-[3rem]" method="post">
-          <i class='bx bx-search-alt-2' style="color: white; font-size: 1rem; font-weight: bold; padding: .5rem"></i>
-          <input type="search" name="search" placeholder="Search teacher by name or emp id" class="w-full border-none indent-7 bg-transparent outline-none text-white active:bg-transparent">
+<header class="flex justify-between fixed top-0 right-0 left-0 p-[.5rem] px-[3rem] max-sm:px-[.3rem] bg-white">
+     <a href="./" class="text-2xl text-transparent font-bold bg-gradient-to-l from-[#0c0e50] to-[#1b20b6] bg-clip-text">TSAS</a>
+     <div class="flex gap-[1rem]">
+          <a href="./pages/login.php" class="button text-lg">Admin</a>
+          <a href="./pages/signup.php" class="button text-lg">Create Account</a>
+     </div>
+</header>
+<main class="bg-img w-full h-fit mt-[3rem] p-[2rem] flex flex-col justify-center items-center gap-[2rem]">
+     <h2 class="text-white text-xl font-semibold w-3/4 max-md:w-full text-center">
+          Our web-based Teacher's Subject Allocation System is designed to streamline and optimize the 
+          process of assigning subjects to teachers in an educational institution. With this system, 
+          we aim to efficiently allocate subjects to teachers based on their qualifications, expertise, 
+          and availability, ensuring a balanced and fair distribution of teaching responsibilities.
+     </h2>
+     <form class="flex w-3/5 max-md:w-full bg-slate-400 rounded-md overflow-hidden" method="post">
+          <input type="search" name="search" class="w-full p-2 text-black indent-[1rem] outline-none" placeholder="Search teacher by name or emp id" >
+          <button type="submit" class="button">Search</button>
      </form>
-</div>
-     <img src="./images/images.png" alt="Clouds" class="fixed -z-10 -top-[1.25cm] left-[18%]">
-     <img src="./images/images.png" alt="Clouds" class="fixed -z-10 bottom-20 left-[3%]">
-<main class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 py-[2cm]">
-     <div class="relative -top-[4cm] ml-[2cm]">
-          <img src="./images/comp.png" alt="Comp" class="w-[14cm] h-[8cm]">
-          <img src="./images/bebi.png" alt="Comp" class="w-[6cm] h-[7cm] absolute -top-[1cm] z-[-1]">
-          <img src="./images/blackbord.png" alt="Comp" class="w-[8cm] h-[5cm] absolute -top-0 left-[6cm]">
-          <span class="text-white font-bold text-2xl absolute top-[2cm] left-[9cm]">TSAS</span>
-     </div>
-     <div class="relative w-full right-[2cm] border-4 border-[#1b20b6] rounded-[1cm] bg-gray-300 p-3 flex flex-col justify-center items-center">
-          <h1 class="text-center text-2xl text-transparent bg-clip-text font-bold bg-gradient-to-t from-[#0c0e50] to-[#1b20b6]">TSAS</h1>
-          <h3 class="text-[#1b20b6] text-center font-bold">Welcome to our Teacher's Subject Allocation System!</h3>
-          <p class="text-center">Our web-based Teacher's Subject Allocation System is designed to streamline and optimize the 
-               process of assigning subjects to teachers in an educational institution. With this 
-               system, we aim to efficiently allocate subjects to teachers based on their qualifications, 
-               expertise, and availability, ensuring a balanced and fair distribution of teaching responsibilities.
-          </p>
-          <a href="./pages/login.php" class="px-3 p-1 text-white font-bold bg-gradient-to-l from-[#0c0e50] to-[#1b20b6] rounded-xl my-2">Continue</a>
-     </div>
 </main>
+
+<section class="flex flex-col justify-center items-center p-[2rem] my-[2rem]">
+<?php
+if (isset($_POST['search'])) {
+     $searched = $_POST['search'];
+     if (!empty($searched)) {
+          showsearch($searched);
+     } else {
+          echo '<script>alert("No data to search")</script>';
+     }
+}
+function showsearch($searched) {
+     global $connection;
+     $sql = "SELECT t.*, a.*, s.* FROM teacher AS t JOIN subAllocation AS a ON t.ID = a.TeacherID JOIN subjects AS s ON a.SubjectID = s.ID 
+             WHERE t.FirstName LIKE '%$searched%' OR t.LastName LIKE '%$searched%' OR t.Email LIKE '%$searched%' 
+             OR s.SubjectFullname LIKE '%$searched%' OR a.AllocationDate LIKE '%$searched%';";
+     $result = $connection->query($sql);
+?>
+          <table class="text-center bg-white overflow-y-auto w-3/4 max-md:w-full rounded-lg shadow-md">
+               <thead class="">
+                    <tr class="shadow-bottom text-white max-sm:text-sm max-[440px]:text-[13px] bg-gradient-to-l from-[#0c0e50] to-[#1b20b6]">
+                         <th class="py-[1rem] max-[440px]:py-[.2rem]">Teacher Names</th>
+                         <th class="py-[1rem] max-[440px]:py-[.2rem]">Teacher Email</th>
+                         <th class="py-[1rem] max-[440px]:py-[.2rem]">Subjects Taught</th>
+                    </tr>
+               </thead>
+               <tbody>
+<?php
+if ($result->num_rows > 0) {
+     while ($row = $result->fetch_assoc()) {
+?>
+                    <tr class="shadow-bottom max-sm:text-sm">
+                         <td class="py-[.5rem]"><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
+                         <td class="py-[.5rem]"><?php echo $row['Email']; ?></td>
+                         <td class="py-[.5rem]"><?php echo $row['SubjectFullname']; ?></td>
+                    </tr>
+<?php
+     }
+} else {
+?>
+                    <tr class="shadow-bottom">
+                         <td colspan='3' class="py-[.5rem]">No Results Found</td>
+                    </tr>
+<?php
+}
+?>
+               </tbody>
+          </table>
+<?php
+}
+?>
+</section>
+<main class="my-[3rem] p-[1rem]">
+<?php
+$sql1 = "SELECT s.SubjectShortname, s.CourseID, c.Branch_Name FROM subjects AS s, courses AS c WHERE c.ID = s.CourseID;";
+$result1 = $connection->query($sql1);
+if ($result1->num_rows > 0){
+?>
+          <h2 class="text-black text-xl font-semibold text-center mb-[2rem]">We Teach The This Subjects</h2>
+          <div class="grid lg:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 justify-center items-center gap-[2rem] px-[1rem]">
+<?php
+     while ($row1 = $result1->fetch_assoc()){
+?>
+               <article class="rounded-md bg-white flex flex-col p-[1rem] justify-center max-sm:px-[2rem] shadow-md">
+                    <h3>Subject: <?php echo $row1['SubjectShortname'] ?></h3>
+                    <h3>Branch: <?php echo $row1['Branch_Name'] ?></h3>
+               </article>
+<?php
+     }
+?>
+          </div>
+<?php
+} else {
+?>
+     <h2 class="text-black text-xl font-semibold text-center">There are no subjects yet!</h2>
+<?php
+}
+?>
+</main>
+     <img src="./images/images.png" alt="Clouds" class="fixed -z-10 top-[1cm] left-[78%]">
+     <img src="./images/images.png" alt="Clouds" class="fixed -z-10 bottom-20 left-[3%]">
 <footer class="bg-gradient-to-t from-[#0c0e50] to-[#1b20b6] px-8 py-1 text-white text-center">
      <div class="flex justify-between">
           <div class="text-center">

@@ -34,3 +34,24 @@
 .invisible {
      display: none;
 }
+
+.button {
+     padding: .1rem 1rem;
+     background: linear-gradient(#0c0e50, #1b20b6);
+     color: white;
+     border: none;
+     transition: .2s;
+}
+
+.button:hover {
+     background: linear-gradient(#0c0faa, #1b20cc);
+     transition: .2s;
+}
+
+.button:active {
+     background: linear-gradient(#0c0fff, #1b20ff);
+}
+
+.bg-img {
+     background: url(../images/Pens.jpg) fixed no-repeat;
+}
